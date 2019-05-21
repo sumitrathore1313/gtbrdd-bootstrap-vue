@@ -6,7 +6,7 @@
           <img src="~/static/icon.png" alt="BootstrapVue logo" class="img-fluid mx-auto d-block mb-3 mb-md-0">
         </aside>
         <section class="col-md-6 order-md-1">
-          <h1 class="mb-3 text-center text-md-left bd-text-purple-bright">Bootstrap + Vue</h1>
+          <h1 class="mb-3 text-center text-md-left bd-text-purple-bright">Getboarded + Bootstrap + Vue</h1>
 
           <p class="lead">
             With <span class="bd-text-purple-bright">BootstrapVue</span> you can build responsive,

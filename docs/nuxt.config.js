@@ -67,7 +67,9 @@ renderer.table = function(header, body) {
 
 module.exports = {
   srcDir: __dirname,
-
+  server: {
+    port: 3003, // default: 3000
+  },
   modern: 'client',
 
   build: {
