@@ -83,3 +83,9 @@ echo 'Done.'
 echo ''
 
 echo 'Done building assets.'
+
+rsync -avu --delete "/home/sumit/Desktop/plugin/gtbrdd-bootstarp-vue/dist/" "/home/sumit/Desktop/front-end/plugins/gtbrdd-bootstrap-vue/dist"
+rsync -avu --delete "/home/sumit/Desktop/plugin/gtbrdd-bootstarp-vue/es/" "/home/sumit/Desktop/front-end/plugins/gtbrdd-bootstrap-vue/es"
+rsync -avu --delete "/home/sumit/Desktop/plugin/gtbrdd-bootstarp-vue/src/" "/home/sumit/Desktop/front-end/plugins/gtbrdd-bootstrap-vue/src"
+rsync -avu --delete "/home/sumit/Desktop/plugin/gtbrdd-bootstarp-vue/package.json" "/home/sumit/Desktop/front-end/plugins/gtbrdd-bootstrap-vue/package.json"
+

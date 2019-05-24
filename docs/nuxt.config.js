@@ -117,14 +117,12 @@ module.exports = {
     color: '#59cc93',
     height: '3px'
   },
-
   manifest: {
     name: 'BootstrapVue',
     short_name: 'BootstrapVue',
     description: 'Quickly integrate Bootstrap 4 components with Vue.js',
     theme_color: '#563d7c'
   },
-
   generate: {
     dir: 'docs-dist',
     routes: () => [
@@ -134,7 +132,6 @@ module.exports = {
       ...getRoutesByDir('docs/markdown', 'misc')
     ]
   },
-
   plugins: [
     '~plugins/bootstrap-vue.js',
     '~plugins/codemirror.js',
