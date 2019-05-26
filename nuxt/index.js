@@ -31,7 +31,7 @@ module.exports = function nuxtBootstrapVue(moduleOptions = {}) {
     )
     if (bootstrapVueCSS) {
       // Add BootstrapVue CSS
-      this.options.css.unshift('bootstrap-vue/dist/bootstrap-vue.css')
+      this.options.css.unshift('gtbrdd-bootstrap-vue/dist/gtbrdd-bootstrap-vue.css')
     }
 
     const bootstrapCSS = pickFirst(
@@ -47,7 +47,7 @@ module.exports = function nuxtBootstrapVue(moduleOptions = {}) {
     }
 
     // Transpile src/
-    this.options.build.transpile.push('bootstrap-vue/src')
+    this.options.build.transpile.push('gtbrdd-bootstrap-vue/src')
 
     // Use es/ or src/
     const usePretranspiled = pickFirst(options.usePretranspiled, this.options.dev)
@@ -89,7 +89,7 @@ module.exports = function nuxtBootstrapVue(moduleOptions = {}) {
     // Register plugin, passing options to plugin template
     this.addPlugin({
       src: resolve(__dirname, 'plugin.template.js'),
-      fileName: 'bootstrap-vue.js',
+      fileName: 'gtbrdd-bootstrap-vue.js',
       options: templateOptions
     })
   })

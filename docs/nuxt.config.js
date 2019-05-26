@@ -8,13 +8,15 @@ const renderer = new marked.Renderer()
 const ANCHOR_LINK_HEADING_LEVELS = [2, 3, 4, 5]
 
 // Get routes by a given dir
+
 const getRoutesByDir = (root, dir, excludes = []) =>
   fs
     .readdirSync(`${root}/${dir}`)
     .filter(c => excludes.indexOf(c) === -1)
     .filter(c => !/\.(s?css|js|ts)$/.test(c))
     .map(page => `/docs/${dir}/${page}`)
-
+console.log(getRoutesByDir)
+console.log('root directory')
 // Custom "highlight.js" implementation for markdown renderer
 renderer.code = (code, language) => {
   const validLang = !!(language && hljs.getLanguage(language))
@@ -68,7 +70,7 @@ renderer.table = function(header, body) {
 module.exports = {
   srcDir: __dirname,
   server: {
-    port: 3003, // default: 3000
+    port: 3003 // default: 3000
   },
   modern: 'client',
 
