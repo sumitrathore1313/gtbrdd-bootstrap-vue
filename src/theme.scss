@@ -1,0 +1,10 @@
+
+/* -------begin customization-------- */
+
+/* simply assign the value */
+$body-bg: #eeeeee;
+
+/* create a new purple color */
+$theme-colors: (
+  primary: $purple
+);

@@ -1,11 +1,19 @@
 // --- BootstrapVue Custom SCSS ---
-
+// Include Bootstrap functions, variables, and mixins
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
 // Requires at least the Bootstrap functions, variables and
 // mixins to be imported first
 
 // Include variables and utilities first
+// import variable
+@import "theme";
+// bootstarp.scss
 @import "variables";
 @import "utilities";
 
 // Include custom SCSS for components
 @import "components/index";
+
+@import "node_modules/bootstrap/scss/bootstrap";

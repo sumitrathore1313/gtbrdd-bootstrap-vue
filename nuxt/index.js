@@ -10,6 +10,7 @@ const pickFirst = (...args) => {
   }
 }
 
+
 module.exports = function nuxtBootstrapVue(moduleOptions = {}) {
   this.nuxt.hook('build:before', () => {
     // Merge moduleOptions with default
