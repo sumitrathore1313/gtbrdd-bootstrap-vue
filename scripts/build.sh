@@ -27,22 +27,22 @@ echo 'Done.'
 echo ''
 
 echo 'Minify JS...'
-terser dist/bootstrap-vue.js \
+terser dist/gtbrdd-bootstrap-vue.js \
        --compress typeofs=false \
        --mangle --comments "/^!/" \
-       --source-map "content=dist/bootstrap-vue.js.map,includeSources,url=bootstrap-vue.min.js.map" \
-       --output dist/bootstrap-vue.min.js
-terser dist/bootstrap-vue.common.js \
+       --source-map "content=dist/gtbrdd-bootstrap-vue.js.map,includeSources,url=gtbrdd-bootstrap-vue.min.js.map" \
+       --output dist/gtbrdd-bootstrap-vue.min.js
+terser dist/gtbrdd-bootstrap-vue.common.js \
        --compress typeofs=false \
        --mangle --comments "/^!/" \
-       --source-map "content=dist/bootstrap-vue.common.js.map,includeSources,url=bootstrap-vue.common.min.js.map" \
-       --output dist/bootstrap-vue.common.min.js
-terser dist/bootstrap-vue.esm.js \
+       --source-map "content=dist/gtbrdd-bootstrap-vue.common.js.map,includeSources,url=gtbrdd-bootstrap-vue.common.min.js.map" \
+       --output dist/gtbrdd-bootstrap-vue.common.min.js
+terser dist/gtbrdd-bootstrap-vue.esm.js \
        --compress typeofs=false \
        --mangle \
        --comments "/^!/" \
-       --source-map "content=dist/bootstrap-vue.esm.js.map,includeSources,url=bootstrap-vue.esm.min.js.map" \
-       --output dist/bootstrap-vue.esm.min.js
+       --source-map "content=dist/gtbrdd-bootstrap-vue.esm.js.map,includeSources,url=gtbrdd-bootstrap-vue.esm.min.js.map" \
+       --output dist/gtbrdd-bootstrap-vue.esm.min.js
 echo 'Done.'
 echo ''
 
@@ -52,9 +52,9 @@ node-sass --output-style expanded \
           --source-map-contents true \
           --precision 6 \
           scripts/build.scss \
-          dist/bootstrap-vue.css
+          dist/gtbrdd-bootstrap-vue.css
 postcss --config scripts/postcss.config.js \
-        --replace dist/bootstrap-vue.css
+        --replace dist/gtbrdd-bootstrap-vue.css
 echo 'Done.'
 echo ''
 
@@ -63,8 +63,8 @@ cleancss --level 1 \
          --format breaksWith=lf \
          --source-map \
          --source-map-inline-sources \
-         --output dist/bootstrap-vue.min.css \
-         dist/bootstrap-vue.css
+         --output dist/gtbrdd-bootstrap-vue.min.css \
+         dist/gtbrdd-bootstrap-vue.css
 echo 'Done.'
 echo ''
 
@@ -84,8 +84,4 @@ echo ''
 
 echo 'Done building assets.'
 
-rsync -avu --delete "/home/sumit/Desktop/plugin/gtbrdd-bootstarp-vue/dist/" "/home/sumit/Desktop/front-end/plugins/gtbrdd-bootstrap-vue/dist"
-rsync -avu --delete "/home/sumit/Desktop/plugin/gtbrdd-bootstarp-vue/es/" "/home/sumit/Desktop/front-end/plugins/gtbrdd-bootstrap-vue/es"
-rsync -avu --delete "/home/sumit/Desktop/plugin/gtbrdd-bootstarp-vue/src/" "/home/sumit/Desktop/front-end/plugins/gtbrdd-bootstrap-vue/src"
-rsync -avu --delete "/home/sumit/Desktop/plugin/gtbrdd-bootstarp-vue/package.json" "/home/sumit/Desktop/front-end/plugins/gtbrdd-bootstrap-vue/package.json"
 

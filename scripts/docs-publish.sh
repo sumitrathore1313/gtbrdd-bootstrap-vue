@@ -10,4 +10,4 @@ mkdir -p ~/.ssh
 chmod 600 ~/.ssh
 ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-gh-pages -t -d docs-dist -b master -r git@github.com:bootstrap-vue/bootstrap-vue.github.io.git
+gh-pages -t -d docs-dist -b master -r git@github.com:gtbrdd-bootstrap-vue/gtbrdd-bootstrap-vue.github.io.git

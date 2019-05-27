@@ -1,16 +1,16 @@
 {
-  "name": "bootstrap-vue",
+  "name": "gtbrdd-bootstrap-vue",
   "version": "2.0.0",
   "description": "BootstrapVue, with over 40 plugins and more than 75 custom components, provides one of the most comprehensive implementations of Bootstrap 4 components and grid system for Vue.js. With extensive and automated WAI-ARIA accessibility markup.",
-  "main": "dist/bootstrap-vue.common.js",
-  "web": "dist/bootstrap-vue.js",
+  "main": "dist/gtbrdd-bootstrap-vue.common.js",
+  "web": "dist/gtbrdd-bootstrap-vue.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
-  "style": "dist/bootstrap-vue.css",
+  "style": "dist/gtbrdd-bootstrap-vue.css",
   "license": "MIT",
   "types": "src/index.d.ts",
-  "repository": "bootstrap-vue/bootstrap-vue",
-  "homepage": "https://bootstrap-vue.js.org",
+  "repository": "gtbrdd-bootstrap-vue/gtbrdd-bootstrap-vue",
+  "homepage": "https://gtbrdd-bootstrap-vue.js.org",
   "contributors": [
     {
       "name": "Pooya Parsa",
@@ -199,7 +199,7 @@
   ],
   "collective": {
     "type": "opencollective",
-    "url": "https://opencollective.com/bootstrap-vue",
-    "logo": "https://opencollective.com/bootstrap-vue/logo.txt"
+    "url": "https://opencollective.com/gtbrdd-bootstrap-vue",
+    "logo": "https://opencollective.com/gtbrdd-bootstrap-vue/logo.txt"
   }
 }
