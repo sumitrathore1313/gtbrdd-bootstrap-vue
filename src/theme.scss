@@ -4,7 +4,21 @@
 /* simply assign the value */
 $body-bg: #eeeeee;
 
-/* create a new purple color */
-$theme-colors: (
-  primary: $blue
-);
+$orange: #f9a115;
+$green: #43d99d;
+
+$primary: $orange;
+$secondary: $green;
+
+$theme-colors:
+  (
+    "primary":    $primary,
+    "secondary":  $secondary,
+    "success":    $success,
+    "info":       $info,
+    "warning":    $warning,
+    "danger":     $danger,
+    "light":      $light,
+    "dark":       $dark
+  );
+
