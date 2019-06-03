@@ -47,6 +47,9 @@ export * from './tabs'
 export * from './toast'
 export * from './tooltip'
 
+// getboarded
+export * from './form-stepper'
+
 // Export default as a plugin that installs all the component group plugins
 export default {
   install: installFactory({ plugins: componentPlugins })
