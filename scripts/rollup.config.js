@@ -5,6 +5,7 @@ import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import { camelCase } from 'lodash'
 import { name, dependencies } from '../package.json'
+import vue from 'rollup-plugin-vue'
 
 const bannerComment = require('./banner')
 
@@ -24,7 +25,12 @@ const externalExcludes = ['core-js', 'popper.js', 'portal-vue', 'vue-functional-
 const baseConfig = {
   input: path.resolve(src, 'index.js'),
   external: externals,
-  plugins: [resolve({ external: ['vue'] }), commonjs(), babel({ exclude: 'node_modules/**' })]
+  plugins: [
+    resolve({ external: ['vue'] }),
+    commonjs(),
+    babel({ exclude: 'node_modules/**' }),
+    vue()
+  ]
 }
 
 // Ensure dist directory exists
