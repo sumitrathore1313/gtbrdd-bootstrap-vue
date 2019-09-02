@@ -96,7 +96,9 @@ const Defaults = {
   fallbackPlacement: 'flip',
   callbacks: {},
   boundary: 'scrollParent',
-  boundaryPadding: 5
+  boundaryPadding: 5,
+  variant: null,
+  customClass: null
 }
 
 // Transition event names
@@ -121,7 +123,7 @@ const generateId = name => `__BV_${name}_${NEXTID++}__`
  */
 class ToolTip {
   // Main constructor
-  constructor(element, config, $root) {
+  constructor(element, config, $parent) {
     // New tooltip object
     this.$isEnabled = true
     this.$fadeTimeout = null
@@ -133,7 +135,8 @@ class ToolTip {
     this.$element = element
     this.$tip = null
     this.$id = generateId(this.constructor.NAME)
-    this.$root = $root || null
+    this.$parent = $parent || null
+    this.$root = $parent && $parent.$root ? $parent.$root : null
     this.$routeWatcher = null
     // We use a bound version of the following handlers for root/modal
     // listeners to maintain the 'this' context
@@ -145,6 +148,10 @@ class ToolTip {
     this._noop = noop.bind(this)
     // Set the configuration
     this.updateConfig(config)
+    // Destroy ourselves if the parent is destroyed
+    if ($parent) {
+      $parent.$once('hook:beforeDestroy', this.destroy.bind(this))
+    }
   }
 
   // NOTE: Overridden by PopOver class
@@ -160,7 +167,7 @@ class ToolTip {
   // Update config
   updateConfig(config) {
     // Merge config into defaults. We use "this" here because PopOver overrides Default
-    let updatedConfig = { ...this.constructor.Default, ...config }
+    const updatedConfig = { ...this.constructor.Default, ...config }
 
     // Sanitize delay
     if (config.delay && isNumber(config.delay)) {
@@ -216,6 +223,7 @@ class ToolTip {
     // Null out other properties
     this.$id = null
     this.$isEnabled = null
+    this.$parent = null
     this.$root = null
     this.$element = null
     this.$config = null
@@ -380,8 +388,6 @@ class ToolTip {
     // Periodic $element visibility check
     // For handling when tip is in <keepalive>, tabs, carousel, etc
     this.visibleCheck(on)
-    // Route change events
-    this.setRouteWatcher(on)
     // On-touch start listeners
     this.setOnTouchStartListener(on)
     if (on && /(focus|blur)/.test(this.$config.trigger)) {
@@ -472,9 +478,10 @@ class ToolTip {
 
   emitEvent(evt) {
     const evtName = evt.type
-    if (this.$root && this.$root.$emit) {
+    const $root = this.$root
+    if ($root && $root.$emit) {
       // Emit an event on $root
-      this.$root.$emit(`bv::${this.constructor.NAME}::${evtName}`, evt)
+      $root.$emit(`bv::${this.constructor.NAME}::${evtName}`, evt)
     }
     const callbacks = this.$config.callbacks || {}
     if (isFunction(callbacks[evtName])) {
@@ -601,6 +608,13 @@ class ToolTip {
     // Add tab index so tip can be focused, and to allow it to be
     // set as relatedTarget in focusin/out events
     this.$tip.tabIndex = -1
+    // Add variant if specified
+    if (this.$config.variant) {
+      addClass(this.$tip, `b-${this.constructor.NAME}-${this.$config.variant}`)
+    }
+    if (this.$config.customClass) {
+      addClass(this.$tip, String(this.$config.customClass))
+    }
     return this.$tip
   }
 
@@ -678,8 +692,12 @@ class ToolTip {
   }
 
   listen() {
-    const triggers = this.$config.trigger.trim().split(/\s+/)
     const el = this.$element
+    /* istanbul ignore next */
+    if (!el) {
+      return
+    }
+    const triggers = this.$config.trigger.trim().split(/\s+/)
 
     // Listen for global show/hide events
     this.setRootListener(true)
@@ -703,10 +721,15 @@ class ToolTip {
   }
 
   unListen() {
+    const el = this.$element
+    /* istanbul ignore next */
+    if (!el) {
+      return
+    }
     const events = ['click', 'focusin', 'focusout', 'mouseenter', 'mouseleave']
     // Using "this" as the handler will get automatically directed to this.handleEvent
     events.forEach(evt => {
-      eventOff(this.$element, evt, this, EvtOpts)
+      eventOff(el, evt, this, EvtOpts)
     }, this)
 
     // Stop listening for global show/hide/enable/disable events
@@ -765,47 +788,29 @@ class ToolTip {
   }
 
   /* istanbul ignore next */
-  setRouteWatcher(on) {
-    if (on) {
-      this.setRouteWatcher(false)
-      if (this.$root && Boolean(this.$root.$route)) {
-        this.$routeWatcher = this.$root.$watch('$route', (newVal, oldVal) => {
-          if (newVal === oldVal) {
-            return
-          }
-          // If route has changed, we force hide the tooltip/popover
-          this.forceHide()
-        })
-      }
-    } else {
-      if (this.$routeWatcher) {
-        // Cancel the route watcher by calling the stored reference
-        this.$routeWatcher()
-        this.$routeWatcher = null
-      }
-    }
-  }
-
-  /* istanbul ignore next */
   setModalListener(on) {
-    const modal = closest(MODAL_CLASS, this.$element)
+    const el = this.$element
+    /* istanbul ignore next */
+    if (!el || !this.$root) {
+      return
+    }
+    const modal = closest(MODAL_CLASS, el)
     if (!modal) {
       // If we are not in a modal, don't worry. be happy
       return
     }
     // We can listen for modal hidden events on $root
-    if (this.$root) {
-      this.$root[on ? '$on' : '$off'](MODAL_CLOSE_EVENT, this.$forceHide)
-    }
+    this.$root[on ? '$on' : '$off'](MODAL_CLOSE_EVENT, this.$forceHide)
   }
 
   setRootListener(on) {
     // Listen for global 'bv::{hide|show}::{tooltip|popover}' hide request event
-    if (this.$root) {
-      this.$root[on ? '$on' : '$off'](`bv::hide::${this.constructor.NAME}`, this.$doHide)
-      this.$root[on ? '$on' : '$off'](`bv::show::${this.constructor.NAME}`, this.$doShow)
-      this.$root[on ? '$on' : '$off'](`bv::disable::${this.constructor.NAME}`, this.$doDisable)
-      this.$root[on ? '$on' : '$off'](`bv::enable::${this.constructor.NAME}`, this.$doEnable)
+    const $root = this.$root
+    if ($root) {
+      $root[on ? '$on' : '$off'](`bv::hide::${this.constructor.NAME}`, this.$doHide)
+      $root[on ? '$on' : '$off'](`bv::show::${this.constructor.NAME}`, this.$doShow)
+      $root[on ? '$on' : '$off'](`bv::disable::${this.constructor.NAME}`, this.$doDisable)
+      $root[on ? '$on' : '$off'](`bv::enable::${this.constructor.NAME}`, this.$doEnable)
     }
   }
 

@@ -8,7 +8,7 @@ export default {
   props: {
     sortBy: {
       type: String,
-      default: null
+      default: ''
     },
     sortDesc: {
       // To Do: Make this tri-state: true, false, null
@@ -27,6 +27,18 @@ export default {
     sortCompare: {
       type: Function,
       default: null
+    },
+    sortCompareOptions: {
+      // Supported localCompare options, see `options` section of:
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare
+      type: Object,
+      default: () => {
+        return { numeric: true }
+      }
+    },
+    sortCompareLocale: {
+      type: String
+      // default: undefined
     },
     noSortReset: {
       // Another prop that should have had a better name.
@@ -73,23 +85,26 @@ export default {
     sortedItems() {
       // Sorts the filtered items and returns a new array of the sorted items
       // or the original items array if not sorted.
-      let items = (this.filteredItems || []).slice()
+      const items = (this.filteredItems || this.localItems || []).slice()
       const sortBy = this.localSortBy
       const sortDesc = this.localSortDesc
       const sortCompare = this.sortCompare
       const localSorting = this.localSorting
+      const sortOptions = { ...this.sortCompareOptions, usage: 'sort' }
+      const sortLocale = this.sortCompareLocale || undefined
       if (sortBy && localSorting) {
+        const formatter = this.getFieldFormatter(sortBy)
         // stableSort returns a new array, and leaves the original array intact
         return stableSort(items, (a, b) => {
           let result = null
           if (isFunction(sortCompare)) {
             // Call user provided sortCompare routine
-            result = sortCompare(a, b, sortBy, sortDesc)
+            result = sortCompare(a, b, sortBy, sortDesc, formatter, sortOptions, sortLocale)
           }
           if (isUndefined(result) || isNull(result) || result === false) {
             // Fallback to built-in defaultSortCompare if sortCompare
             // is not defined or returns null/false
-            result = defaultSortCompare(a, b, sortBy)
+            result = defaultSortCompare(a, b, sortBy, formatter, sortOptions, sortLocale)
           }
           // Negate result if sorting in descending order
           return (result || 0) * (sortDesc ? -1 : 1)
@@ -120,7 +135,7 @@ export default {
         /* istanbul ignore next */
         return
       }
-      this.localSortBy = newVal || null
+      this.localSortBy = newVal || ''
     },
     // Update .sync props
     localSortDesc(newVal, oldVal) {
@@ -177,7 +192,7 @@ export default {
         }
         sortChanged = true
       } else if (this.localSortBy && !this.noSortReset) {
-        this.localSortBy = null
+        this.localSortBy = ''
         toggleLocalSortDesc()
         sortChanged = true
       }

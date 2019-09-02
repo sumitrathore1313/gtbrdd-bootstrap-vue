@@ -1,6 +1,7 @@
 import Vue from '../../utils/vue'
 import ToolTip from '../../utils/tooltip.class'
 import warn from '../../utils/warn'
+import { isArray, arrayIncludes } from '../../utils/array'
 import { getComponentConfig } from '../../utils/config'
 import { HTMLElement } from '../../utils/safe-types'
 import normalizeSlotMixin from '../../mixins/normalize-slot'
@@ -9,7 +10,7 @@ import toolpopMixin from '../../mixins/toolpop'
 const NAME = 'BTooltip'
 
 // @vue/component
-export default Vue.extend({
+export const BTooltip = /*#__PURE__*/ Vue.extend({
   name: NAME,
   mixins: [toolpopMixin, normalizeSlotMixin],
   props: {
@@ -25,6 +26,25 @@ export default Vue.extend({
       type: String,
       default: 'top'
     },
+    fallbackPlacement: {
+      type: [String, Array],
+      default: 'flip',
+      validator(value) {
+        return isArray(value) || arrayIncludes(['flip', 'clockwise', 'counterclockwise'], value)
+      }
+    },
+    variant: {
+      type: String,
+      default: () => getComponentConfig(NAME, 'variant')
+    },
+    customClass: {
+      type: String,
+      default: () => getComponentConfig(NAME, 'customClass')
+    },
+    delay: {
+      type: [Number, Object, String],
+      default: () => getComponentConfig(NAME, 'delay')
+    },
     boundary: {
       // String: scrollParent, window, or viewport
       // Element: element reference
@@ -36,16 +56,13 @@ export default Vue.extend({
       default: () => getComponentConfig(NAME, 'boundaryPadding')
     }
   },
-  data() {
-    return {}
-  },
   methods: {
     createToolpop() {
       // getTarget is in toolpop mixin
       const target = this.getTarget()
       /* istanbul ignore else */
       if (target) {
-        this._toolpop = new ToolTip(target, this.getConfig(), this.$root)
+        this._toolpop = new ToolTip(target, this.getConfig(), this)
       } else {
         this._toolpop = null
         warn("b-tooltip: 'target' element not found!")
@@ -61,3 +78,5 @@ export default Vue.extend({
     )
   }
 })
+
+export default BTooltip

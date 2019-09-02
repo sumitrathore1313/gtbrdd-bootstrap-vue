@@ -1,10 +1,10 @@
 import Vue from '../../utils/vue'
 import { mergeData } from 'vue-functional-data-merge'
-import InputGroupPrepend from './input-group-prepend'
-import InputGroupAppend from './input-group-append'
-import InputGroupText from './input-group-text'
 import { htmlOrText } from '../../utils/html'
 import { hasNormalizedSlot, normalizeSlot } from '../../utils/normalize-slot'
+import { BInputGroupPrepend } from './input-group-prepend'
+import { BInputGroupAppend } from './input-group-append'
+import { BInputGroupText } from './input-group-text'
 
 export const props = {
   id: {
@@ -16,13 +16,13 @@ export const props = {
   prepend: {
     type: String
   },
-  prependHTML: {
+  prependHtml: {
     type: String
   },
   append: {
     type: String
   },
-  appendHTML: {
+  appendHtml: {
     type: String
   },
   tag: {
@@ -32,7 +32,7 @@ export const props = {
 }
 
 // @vue/component
-export default Vue.extend({
+export const BInputGroup = /*#__PURE__*/ Vue.extend({
   name: 'BInputGroup',
   functional: true,
   props: props,
@@ -43,42 +43,42 @@ export default Vue.extend({
     const childNodes = []
 
     // Prepend prop/slot
-    if (props.prepend || props.prependHTML || hasNormalizedSlot('prepend', $scopedSlots, $slots)) {
+    if (props.prepend || props.prependHtml || hasNormalizedSlot('prepend', $scopedSlots, $slots)) {
       childNodes.push(
-        h(InputGroupPrepend, [
+        h(BInputGroupPrepend, [
           // Prop
-          props.prepend || props.prependHTML
-            ? h(InputGroupText, { domProps: htmlOrText(props.prependHTML, props.prepend) })
-            : h(false),
+          props.prepend || props.prependHtml
+            ? h(BInputGroupText, { domProps: htmlOrText(props.prependHtml, props.prepend) })
+            : h(),
           // Slot
-          normalizeSlot('prepend', {}, $scopedSlots, $slots) || h(false)
+          normalizeSlot('prepend', {}, $scopedSlots, $slots) || h()
         ])
       )
     } else {
-      childNodes.push(h(false))
+      childNodes.push(h())
     }
 
     // Default slot
     if (hasNormalizedSlot('default', $scopedSlots, $slots)) {
       childNodes.push(...normalizeSlot('default', {}, $scopedSlots, $slots))
     } else {
-      childNodes.push(h(false))
+      childNodes.push(h())
     }
 
     // Append prop
-    if (props.append || props.appendHTML || hasNormalizedSlot('append', $scopedSlots, $slots)) {
+    if (props.append || props.appendHtml || hasNormalizedSlot('append', $scopedSlots, $slots)) {
       childNodes.push(
-        h(InputGroupAppend, [
+        h(BInputGroupAppend, [
           // prop
-          props.append || props.appendHTML
-            ? h(InputGroupText, { domProps: htmlOrText(props.appendHTML, props.append) })
-            : h(false),
+          props.append || props.appendHtml
+            ? h(BInputGroupText, { domProps: htmlOrText(props.appendHtml, props.append) })
+            : h(),
           // Slot
-          normalizeSlot('append', {}, $scopedSlots, $slots) || h(false)
+          normalizeSlot('append', {}, $scopedSlots, $slots) || h()
         ])
       )
     } else {
-      childNodes.push(h(false))
+      childNodes.push(h())
     }
 
     return h(
@@ -97,3 +97,5 @@ export default Vue.extend({
     )
   }
 })
+
+export default BInputGroup

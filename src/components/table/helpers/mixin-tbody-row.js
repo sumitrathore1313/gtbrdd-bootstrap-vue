@@ -64,15 +64,10 @@ export default {
     // Method to get the value for a field
     getFormattedValue(item, field) {
       const key = field.key
-      const formatter = field.formatter
-      const parent = this.$parent
+      const formatter = this.getFieldFormatter(key)
       let value = get(item, key, null)
-      if (formatter) {
-        if (isFunction(formatter)) {
-          value = formatter(value, key, item)
-        } else if (isString(formatter) && isFunction(parent[formatter])) {
-          value = parent[formatter](value, key, item)
-        }
+      if (isFunction(formatter)) {
+        value = formatter(value, key, item)
       }
       return isUndefined(value) || isNull(value) ? '' : value
     },
@@ -80,7 +75,7 @@ export default {
       const keyCode = evt.keyCode
       const target = evt.target
       const trs = this.$refs.itemRows
-      if (this.stopIfBusy(evt)) {
+      if (this.stopIfBusy && this.stopIfBusy(evt)) {
         // If table is busy (via provider) then don't propagate
         return
       } else if (!(target && target.tagName === 'TR' && target === document.activeElement)) {
@@ -124,7 +119,7 @@ export default {
     },
     // Row event handlers
     rowClicked(e, item, index) {
-      if (this.stopIfBusy(e)) {
+      if (this.stopIfBusy && this.stopIfBusy(e)) {
         // If table is busy (via provider) then don't propagate
         return
       } else if (filterEvent(e)) {
@@ -138,14 +133,14 @@ export default {
       this.$emit('row-clicked', item, index, e)
     },
     middleMouseRowClicked(e, item, index) {
-      if (this.stopIfBusy(e)) {
+      if (this.stopIfBusy && this.stopIfBusy(e)) {
         // If table is busy (via provider) then don't propagate
         return
       }
       this.$emit('row-middle-clicked', item, index, e)
     },
     rowDblClicked(e, item, index) {
-      if (this.stopIfBusy(e)) {
+      if (this.stopIfBusy && this.stopIfBusy(e)) {
         // If table is busy (via provider) then don't propagate
         return
       } else if (filterEvent(e)) {
@@ -156,21 +151,21 @@ export default {
       this.$emit('row-dblclicked', item, index, e)
     },
     rowHovered(e, item, index) {
-      if (this.stopIfBusy(e)) {
+      if (this.stopIfBusy && this.stopIfBusy(e)) {
         // If table is busy (via provider) then don't propagate
         return
       }
       this.$emit('row-hovered', item, index, e)
     },
     rowUnhovered(e, item, index) {
-      if (this.stopIfBusy(e)) {
+      if (this.stopIfBusy && this.stopIfBusy(e)) {
         // If table is busy (via provider) then don't propagate
         return
       }
       this.$emit('row-unhovered', item, index, e)
     },
     rowContextmenu(e, item, index) {
-      if (this.stopIfBusy(e)) {
+      if (this.stopIfBusy && this.stopIfBusy(e)) {
         // If table is busy (via provider) then don't propagate
         return
       }
@@ -183,7 +178,6 @@ export default {
       // Renders a TD or TH for a row's field
       const $scoped = this.$scopedSlots
       const detailsSlot = $scoped['row-details']
-      const rowSelected = this.selectedRows[rowIndex]
       const formatted = this.getFormattedValue(item, field)
       const data = {
         // For the Vue key, we concatenate the column index and
@@ -204,8 +198,11 @@ export default {
         unformatted: get(item, field.key, ''),
         value: formatted,
         toggleDetails: toggleDetailsFn,
-        detailsShowing: Boolean(item._showDetails),
-        rowSelected: Boolean(rowSelected)
+        detailsShowing: Boolean(item._showDetails)
+      }
+      if (this.selectedRows) {
+        // Add in rowSelected scope property if selectable rows supported
+        slotScope.rowSelected = Boolean(this.selectedRows[rowIndex])
       }
       let $childNodes = $scoped[field.key] ? $scoped[field.key](slotScope) : toString(formatted)
       if (this.isStacked) {
@@ -274,6 +271,10 @@ export default {
         }
       }
 
+      // Selectable classes and attributes
+      const selectableClasses = this.selectableRowClasses ? this.selectableRowClasses(rowIndex) : {}
+      const selectableAttrs = this.selectableRowAttrs ? this.selectableRowAttrs(rowIndex) : {}
+
       // Add the item row
       $rows.push(
         h(
@@ -284,7 +285,7 @@ export default {
             refInFor: true,
             class: [
               this.rowClasses(item),
-              this.selectableRowClasses(rowIndex),
+              selectableClasses,
               {
                 'b-table-has-details': rowShowDetails
               }
@@ -297,7 +298,7 @@ export default {
               'aria-owns': detailsId,
               'aria-rowindex': ariaRowIndex,
               role: 'row',
-              ...this.selectableRowAttrs(rowIndex)
+              ...selectableAttrs
             },
             on: {
               ...handlers,
@@ -377,10 +378,10 @@ export default {
         )
       } else if ($detailsSlot) {
         // Only add the placeholder if a the table has a row-details slot defined (but not shown)
-        $rows.push(h(false))
+        $rows.push(h())
         if (tableStriped) {
           // add extra placeholder if table is striped
-          $rows.push(h(false))
+          $rows.push(h())
         }
       }
 

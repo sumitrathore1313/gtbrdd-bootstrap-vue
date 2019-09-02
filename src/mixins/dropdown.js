@@ -2,15 +2,13 @@ import Popper from 'popper.js'
 import BvEvent from '../utils/bv-event.class'
 import KeyCodes from '../utils/key-codes'
 import warn from '../utils/warn'
-import { closest, contains, isVisible, selectAll } from '../utils/dom'
+import { closest, contains, isVisible, requestAF, selectAll } from '../utils/dom'
 import { isNull } from '../utils/inspect'
 import clickOutMixin from './click-out'
 import focusInMixin from './focus-in'
 
-// Return an Array of visible items
-function filterVisibles(els) {
-  return (els || []).filter(isVisible)
-}
+// Return an array of visible items
+const filterVisibles = els => (els || []).filter(isVisible)
 
 // Dropdown item CSS selectors
 const Selector = {
@@ -92,6 +90,11 @@ export default {
       type: Boolean,
       default: false
     },
+    lazy: {
+      // If true, only render menu contents when open
+      type: Boolean,
+      default: false
+    },
     popperOpts: {
       // type: Object,
       default: () => {}
@@ -129,7 +132,7 @@ export default {
 
       if (newValue !== oldValue) {
         const evtName = newValue ? 'show' : 'hide'
-        let bvEvt = new BvEvent(evtName, {
+        const bvEvt = new BvEvent(evtName, {
           cancelable: true,
           vueTarget: this,
           target: this.$refs.menu,
@@ -248,7 +251,7 @@ export default {
       } else if (this.right) {
         placement = AttachmentMap.BOTTOMEND
       }
-      let popperConfig = {
+      const popperConfig = {
         placement,
         modifiers: {
           offset: { offset: this.offset || 0 },
@@ -285,7 +288,11 @@ export default {
       if (this.disabled) {
         return
       }
-      this.visible = true
+      // Wrap in a requestAnimationFrame to allow any previous
+      // click handling to occur first
+      requestAF(() => {
+        this.visible = true
+      })
     },
     hide(refocus = false) {
       // Public method to hide dropdown
@@ -410,7 +417,7 @@ export default {
       })
     },
     focusItem(idx, items) {
-      let el = items.find((el, i) => i === idx)
+      const el = items.find((el, i) => i === idx)
       if (el && el.focus) {
         el.focus()
       }
@@ -423,7 +430,7 @@ export default {
       this.$refs.menu.focus && this.$refs.menu.focus()
     },
     focusToggler() {
-      let toggler = this.toggler
+      const toggler = this.toggler
       if (toggler && toggler.focus) {
         toggler.focus()
       }

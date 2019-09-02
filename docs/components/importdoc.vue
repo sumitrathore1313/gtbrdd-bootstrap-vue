@@ -4,13 +4,13 @@
     class="bd-content"
   >
     <template v-if="components.length > 0">
-      <article>
+      <article class="bd-content">
         <anchored-heading id="importing-individual-components" level="3">
           Importing individual components
         </anchored-heading>
 
         <p>
-          <b-badge variant="info" class="small">ENHANCED in 2.0.0-rc.20</b-badge> You can
+          <b-badge variant="info" class="small">CHANGED in 2.0.0-rc.22</b-badge> You can
           import individual components into your project via the following named exports:
         </p>
 
@@ -23,29 +23,29 @@
           striped
         >
           <template slot="component" slot-scope="{ value }">
-            <code class="text-nowrap">{{ value }}</code>
+            <code class="text-nowrap notranslate" translate="no">{{ value }}</code>
           </template>
           <template slot="namedExport" slot-scope="{ value }">
-            <code class="text-nowrap">{{ value }}</code>
+            <code class="text-nowrap notranslate" translate="no">{{ value }}</code>
           </template>
           <template slot="importPath" slot-scope="{ value }">
-            <code class="text-nowrap">{{ value }}</code>
+            <code class="text-nowrap notranslate" translate="no">{{ value }}</code>
           </template>
         </b-table>
 
         <p><strong>Example:</strong></p>
-        <pre class="hljs js text-monospace p-2">{{ componentImportCode }}</pre>
+        <pre class="hljs language-js text-monospace p-2 notranslate" translate="no">{{ componentImportCode }}</pre>
       </article>
     </template>
 
     <template v-if="directives.length > 0">
-      <article>
+      <article class="bd-content">
         <anchored-heading id="importing-individual-directives" level="3">
           Importing individual directives
         </anchored-heading>
 
         <p>
-          <b-badge variant="info" class="small">ENHANCED in 2.0.0-rc.20 </b-badge> You can
+          <b-badge variant="info" class="small">CHANGED in 2.0.0-rc.22 </b-badge> You can
           import individual directives into your project via the following named exports:
         </p>
 
@@ -58,28 +58,28 @@
           striped
         >
           <template slot="directive" slot-scope="{ value }">
-            <code class="text-nowrap">{{ value }}</code>
+            <code class="text-nowrap notranslate" translate="no">{{ value }}</code>
           </template>
           <template slot="namedExport" slot-scope="{ value }">
-            <code class="text-nowrap">{{ value }}</code>
+            <code class="text-nowrap notranslate" translate="no">{{ value }}</code>
           </template>
           <template slot="importPath" slot-scope="{ value }">
-            <code class="text-nowrap">{{ value }}</code>
+            <code class="text-nowrap notranslate" translate="no">{{ value }}</code>
           </template>
         </b-table>
 
         <p><strong>Example:</strong></p>
-        <pre class="hljs js text-monospace p-2">{{ directiveImportCode }}</pre>
+        <pre class="hljs language-js text-monospace p-2 notranslate" translate="no">{{ directiveImportCode }}</pre>
       </article>
     </template>
 
-    <article>
+    <article class="bd-content">
       <anchored-heading id="importing-as-a-plugin" level="3">
         Importing as a Vue.js plugin
       </anchored-heading>
 
       <p>
-        <b-badge variant="info" class="small">ENHANCED in 2.0.0-rc.20</b-badge> Importing plugins
+        <b-badge variant="info" class="small">CHANGED in 2.0.0-rc.22</b-badge> Importing plugins
         has been simplified.
       </p>
 
@@ -104,30 +104,45 @@
         striped
       >
         <template slot="namedExport" slot-scope="{ value, item }">
-          <code class="text-nowrap">{{ value }}</code>
+          <code class="text-nowrap notranslate" translate="no">{{ value }}</code>
           <b-badge v-if="item.legacy" variant="warning" class="small">DEPRECATED</b-badge>
           <b-badge v-else variant="success" class="small">PREFERRED</b-badge>
         </template>
         <template slot="importPath" slot-scope="{ value }">
-          <code class="text-nowrap">{{ value }}</code>
+          <code class="text-nowrap notranslate" translate="no">{{ value }}</code>
         </template>
       </b-table>
 
       <template v-if="meta.plugins && meta.plugins.length > 0">
         <p>This plugin also automatically includes the following plugins:</p>
         <ul>
-          <li v-for="plugin in meta.plugins" :key="plugin"><code>{{ plugin }}</code></li>
+          <li v-for="plugin in meta.plugins" :key="plugin">
+            <code class="notranslate" translate="no">{{ plugin }}</code>
+          </li>
         </ul>
       </template>
 
       <p><strong>Example:</strong></p>
-      <pre class="hljs js text-monospace p-2">{{ pluginImportCode }}</pre>
+      <pre class="hljs language-js text-monospace p-2 notranslate" translate="no">{{ pluginImportCode }}</pre>
     </article>
+
+    <aside class="alert alert-warning my-4">
+      <p class="mb-0">
+        <b-badge variant="warning" tag="strong">Deprecation Warning as of v2.0.0-rc.22:</b-badge>
+        Importing components, directives and plugins from
+        <code class="notranslate" translate="no">bootstrap-vue/es/*</code>
+        has been deprecated. All components, directives and plugins are now available as top-level named
+        exports in the <code class="notranslate" translate="no">ESM</code> and
+        <code class="notranslate" translate="no">CommonJS</code> builds. The
+        <code class="notranslate" translate="no">es/</code> directory build will be removed in a future
+        release.
+      </p>
+    </aside>
   </section>
 </template>
 
 <script>
-import hljs from 'highlight.js'
+import hljs from '../utils/hljs'
 import kebabCase from 'lodash/kebabCase'
 import startCase from 'lodash/startCase'
 import AnchoredHeading from './anchored-heading'
@@ -169,14 +184,14 @@ export default {
     },
     pluginImports() {
       const pluginLocation = this.isComponentRoute ? 'components' : 'directives'
-      const legacyName = this.pluginName.replace(/^VB|Plugin$/g, '')
+      // const legacyName = this.pluginName.replace(/^VB|Plugin$/g, '')
       return [
         {
           namedExport: this.pluginName,
-          importPath: `bootstrap-vue/es/${pluginLocation}`
+          importPath: 'bootstrap-vue'
         },
         {
-          namedExport: legacyName,
+          namedExport: this.pluginName,
           importPath: `bootstrap-vue/es/${pluginLocation}`,
           legacy: true
         },
@@ -216,16 +231,12 @@ export default {
       ].join('\n')
     },
     pluginImportCode() {
-      const pluginLocation = this.isComponentRoute ? 'components' : 'directives'
-      const legacyName = this.pluginName.replace(/^VB|Plugin$/g, '')
+      // const pluginLocation = this.isComponentRoute ? 'components' : 'directives'
       return [
         '// Importing the named export',
-        `import { ${this.pluginName} } from 'bootstrap-vue/es/${pluginLocation}'`,
-        `Vue.use(${this.pluginName})`,
-        '',
-        '// Or importing the default export (deprecated)',
-        `import ${legacyName} from 'bootstrap-vue/es/${pluginLocation}/${this.pluginDir}'`,
-        `Vue.use(${legacyName})`
+        // `import { ${this.pluginName} } from 'bootstrap-vue/es/${pluginLocation}'`,
+        `import { ${this.pluginName} } from 'bootstrap-vue'`,
+        `Vue.use(${this.pluginName})`
       ].join('\n')
     }
   },
@@ -245,7 +256,7 @@ export default {
     componentPath(component) {
       // const componentName = this.componentName(component).replace(/^b-/, '')
       // return `bootstrap-vue/es/components/${this.pluginDir}/${componentName}`
-      return `bootstrap-vue/es/components`
+      return 'bootstrap-vue'
     },
     directiveName(directive) {
       return kebabCase(directive)
@@ -258,7 +269,7 @@ export default {
     directivePath(directive) {
       // const directiveName = this.directiveName(directive).replace(/^b-/, '')
       // return `bootstrap-vue/es/directives/${directiveName}/${directiveName}`
-      return `bootstrap-vue/es/directives`
+      return 'bootstrap-vue'
     }
   }
 }

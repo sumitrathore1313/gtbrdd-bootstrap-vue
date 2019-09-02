@@ -22,16 +22,14 @@ describe('dropdown', () => {
     })
     // Mock getBCR so that the isVisible(el) test returns true
     // Needed for keyboard navigation testing
-    Element.prototype.getBoundingClientRect = jest.fn(() => {
-      return {
-        width: 24,
-        height: 24,
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0
-      }
-    })
+    Element.prototype.getBoundingClientRect = jest.fn(() => ({
+      width: 24,
+      height: 24,
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0
+    }))
   })
 
   afterEach(() => {
@@ -117,6 +115,8 @@ describe('dropdown', () => {
     expect($split.classes()).toContain('btn-secondary')
     expect($split.attributes('id')).toBeDefined()
     expect($split.attributes('id')).toEqual(`${wrapperId}__BV_button_`)
+    expect($split.attributes('type')).toBeDefined()
+    expect($split.attributes('type')).toEqual('button')
     expect($split.text()).toEqual('')
 
     expect($toggle.classes()).toContain('btn')
@@ -130,6 +130,8 @@ describe('dropdown', () => {
     expect($toggle.attributes('aria-expanded')).toEqual('false')
     expect($toggle.attributes('id')).toBeDefined()
     expect($toggle.attributes('id')).toEqual(`${wrapperId}__BV_toggle_`)
+    expect($toggle.attributes('type')).toBeDefined()
+    expect($toggle.attributes('type')).toEqual('button')
     expect($toggle.findAll('span.sr-only').length).toBe(1)
     expect($toggle.find('span.sr-only').text()).toEqual('Toggle Dropdown')
     expect($toggle.text()).toEqual('Toggle Dropdown')
@@ -149,6 +151,36 @@ describe('dropdown', () => {
     wrapper.destroy()
   })
 
+  it('split mode accepts split-button-type value', async () => {
+    const wrapper = mount(BDropdown, {
+      attachToDocument: true,
+      propsData: {
+        split: true,
+        splitButtonType: 'submit'
+      }
+    })
+
+    expect(wrapper.is('div')).toBe(true)
+    expect(wrapper.isVueInstance()).toBe(true)
+
+    await waitNT(wrapper.vm)
+
+    expect(wrapper.classes()).toContain('dropdown')
+
+    expect(wrapper.findAll('button').length).toBe(2)
+    const $buttons = wrapper.findAll('button')
+    const $split = $buttons.at(0)
+    const $toggle = $buttons.at(1)
+
+    expect($split.attributes('type')).toBeDefined()
+    expect($split.attributes('type')).toEqual('submit')
+
+    expect($toggle.attributes('type')).toBeDefined()
+    expect($toggle.attributes('type')).toEqual('button')
+
+    wrapper.destroy()
+  })
+
   it('renders default slot inside menu', async () => {
     const wrapper = mount(BDropdown, {
       attachToDocument: true,
@@ -163,6 +195,27 @@ describe('dropdown', () => {
     expect(wrapper.findAll('.dropdown-menu').length).toBe(1)
     const $menu = wrapper.find('.dropdown-menu')
     expect($menu.text()).toEqual('foobar')
+
+    wrapper.destroy()
+  })
+
+  it('does not render default slot inside menu when prop lazy set', async () => {
+    const wrapper = mount(BDropdown, {
+      attachToDocument: true,
+      propsData: {
+        lazy: true
+      },
+      slots: {
+        default: 'foobar'
+      }
+    })
+
+    expect(wrapper.is('div')).toBe(true)
+    expect(wrapper.isVueInstance()).toBe(true)
+
+    expect(wrapper.findAll('.dropdown-menu').length).toBe(1)
+    const $menu = wrapper.find('.dropdown-menu')
+    expect($menu.text()).not.toEqual('foobar')
 
     wrapper.destroy()
   })
@@ -241,6 +294,7 @@ describe('dropdown', () => {
     expect(wrapper.find('.dropdown-menu').classes()).not.toContain('show')
     wrapper.vm.show()
     await waitNT(wrapper.vm)
+    await waitRAF()
     expect(wrapper.classes()).toContain('dropdown')
     expect(wrapper.classes()).toContain('dropup')
     expect(wrapper.classes()).toContain('show')
@@ -261,6 +315,7 @@ describe('dropdown', () => {
     expect(wrapper.find('.dropdown-menu').classes()).not.toContain('show')
     wrapper.vm.show()
     await waitNT(wrapper.vm)
+    await waitRAF()
     expect(wrapper.classes()).toContain('dropdown')
     expect(wrapper.classes()).toContain('dropright')
     expect(wrapper.classes()).toContain('show')
@@ -281,6 +336,7 @@ describe('dropdown', () => {
     expect(wrapper.find('.dropdown-menu').classes()).not.toContain('show')
     wrapper.vm.show()
     await waitNT(wrapper.vm)
+    await waitRAF()
     expect(wrapper.classes()).toContain('dropdown')
     expect(wrapper.classes()).toContain('dropleft')
     expect(wrapper.classes()).toContain('show')
@@ -301,6 +357,7 @@ describe('dropdown', () => {
     expect(wrapper.find('.dropdown-menu').classes()).not.toContain('show')
     wrapper.vm.show()
     await waitNT(wrapper.vm)
+    await waitRAF()
     expect(wrapper.classes()).toContain('dropdown')
     expect(wrapper.classes()).toContain('show')
     expect(wrapper.find('.dropdown-menu').classes()).toContain('dropdown-menu-right')
@@ -495,7 +552,7 @@ describe('dropdown', () => {
     expect($toggle.attributes('aria-expanded')).toEqual('true')
 
     // Should close on root emit when argument is not self
-    wrapper.vm.$root.$emit('bv::dropdown::shown', {})
+    wrapper.vm.$root.$emit('bv::dropdown::shown')
     await waitNT(wrapper.vm)
     await waitRAF()
     expect($dropdown.classes()).not.toContain('show')

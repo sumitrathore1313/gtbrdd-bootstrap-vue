@@ -35,7 +35,7 @@ export default {
       ]
     },
     headClicked(evt, field, isFoot) {
-      if (this.stopIfBusy(evt)) {
+      if (this.stopIfBusy && this.stopIfBusy(evt)) {
         // If table is busy (via provider) then don't propagate
         return
       } else if (filterEvent(evt)) {
@@ -52,13 +52,13 @@ export default {
     },
     renderThead(isFoot = false) {
       const h = this.$createElement
-
-      if (this.isStacked === true) {
-        // In always stacked mode, we don't bother rendering the head/foot
-        return h(false)
-      }
-
       const fields = this.computedFields || []
+
+      if (this.isStacked === true || fields.length === 0) {
+        // In always stacked mode, we don't bother rendering the head/foot.
+        // Or if no field headings (empty table)
+        return h()
+      }
 
       // Helper function to generate a field TH cell
       const makeCell = (field, colIndex) => {
@@ -82,9 +82,11 @@ export default {
             }
           }
         }
+        const sortAttrs = this.isSortable ? this.sortTheadThAttrs(field.key, field, isFoot) : {}
+        const sortClass = this.isSortable ? this.sortTheadThClasses(field.key, field, isFoot) : null
         const data = {
           key: field.key,
-          class: [this.fieldClasses(field), this.sortTheadThClasses(field.key, field, isFoot)],
+          class: [this.fieldClasses(field), sortClass],
           style: field.thStyle || {},
           attrs: {
             // We only add a tabindex of 0 if there is a head-clicked listener
@@ -95,12 +97,12 @@ export default {
             scope: 'col',
             'aria-colindex': String(colIndex + 1),
             'aria-label': ariaLabel,
-            ...this.sortTheadThAttrs(field.key, field, isFoot)
+            ...sortAttrs
           },
           on: handlers
         }
-        let fieldScope = { label: field.label, column: field.key, field: field }
-        let slot =
+        const fieldScope = { label: field.label, column: field.key, field: field }
+        const slot =
           isFoot && this.hasNormalizedSlot(`FOOT_${field.key}`)
             ? this.normalizeSlot(`FOOT_${field.key}`, fieldScope)
             : this.normalizeSlot(`HEAD_${field.key}`, fieldScope)
@@ -122,7 +124,7 @@ export default {
           columns: fields.length,
           fields: fields
         }
-        $trs.push(this.normalizeSlot('thead-top', scope) || h(false))
+        $trs.push(this.normalizeSlot('thead-top', scope) || h())
         $trs.push(h('tr', { class: this.theadTrClass, attrs: { role: 'row' } }, $cells))
       }
 
