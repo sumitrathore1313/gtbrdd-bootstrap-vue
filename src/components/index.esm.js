@@ -42,6 +42,9 @@ import { TabsPlugin } from './tabs'
 import { ToastPlugin } from './toast'
 import { TooltipPlugin } from './tooltip'
 
+// Getboarded
+import { FormStepperPlugin } from './form-stepper'
+
 // Main plugin to install all component group plugins
 export const componentsPlugin = /*#__PURE__*/ pluginFactory({
   plugins: {
@@ -82,7 +85,10 @@ export const componentsPlugin = /*#__PURE__*/ pluginFactory({
     TablePlugin,
     TabsPlugin,
     ToastPlugin,
-    TooltipPlugin
+    TooltipPlugin,
+
+    //  getboarded
+    FormStepperPlugin
   }
 })
 
@@ -300,3 +306,6 @@ export { BToaster } from './toast/toaster'
 // export * from './tooltip'
 export { TooltipPlugin } from './tooltip'
 export { BTooltip } from './tooltip/tooltip'
+
+// Getboarded
+export { FormStepperPlugin } from './form-stepper'

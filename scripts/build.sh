@@ -36,22 +36,22 @@ echo 'Done.'
 echo ''
 
 echo 'Minify JS...'
-terser dist/gtbrdd-bootstrap-vue.js \
+terser dist/bootstrap-vue.js \
        --compress typeofs=false \
        --mangle --comments "/^!/" \
-       --source-map "content=dist/gtbrdd-bootstrap-vue.js.map,includeSources,url=gtbrdd-bootstrap-vue.min.js.map" \
-       --output dist/gtbrdd-bootstrap-vue.min.js
-terser dist/gtbrdd-bootstrap-vue.common.js \
+       --source-map "content=dist/bootstrap-vue.js.map,includeSources,url=bootstrap-vue.min.js.map" \
+       --output dist/bootstrap-vue.min.js
+terser dist/bootstrap-vue.common.js \
        --compress typeofs=false \
        --mangle --comments "/^!/" \
-       --source-map "content=dist/gtbrdd-bootstrap-vue.common.js.map,includeSources,url=gtbrdd-bootstrap-vue.common.min.js.map" \
-       --output dist/gtbrdd-bootstrap-vue.common.min.js
-terser dist/gtbrdd-bootstrap-vue.esm.js \
+       --source-map "content=dist/bootstrap-vue.common.js.map,includeSources,url=bootstrap-vue.common.min.js.map" \
+       --output dist/bootstrap-vue.common.min.js
+terser dist/bootstrap-vue.esm.js \
        --compress typeofs=false \
        --mangle \
        --comments "/^!/" \
-       --source-map "content=dist/gtbrdd-bootstrap-vue.esm.js.map,includeSources,url=gtbrdd-bootstrap-vue.esm.min.js.map" \
-       --output dist/gtbrdd-bootstrap-vue.esm.min.js
+       --source-map "content=dist/bootstrap-vue.esm.js.map,includeSources,url=bootstrap-vue.esm.min.js.map" \
+       --output dist/bootstrap-vue.esm.min.js
 echo 'Done.'
 echo ''
 
@@ -61,9 +61,9 @@ node-sass --output-style expanded \
           --source-map-contents true \
           --precision 6 \
           scripts/build.scss \
-          dist/gtbrdd-bootstrap-vue.css
+          dist/bootstrap-vue.css
 postcss --config scripts/postcss.config.js \
-        --replace dist/gtbrdd-bootstrap-vue.css
+        --replace dist/bootstrap-vue.css
 echo 'Done.'
 echo ''
 
@@ -72,8 +72,8 @@ cleancss --level 1 \
          --format breaksWith=lf \
          --source-map \
          --source-map-inline-sources \
-         --output dist/gtbrdd-bootstrap-vue.min.css \
-         dist/gtbrdd-bootstrap-vue.css
+         --output dist/bootstrap-vue.min.css \
+         dist/bootstrap-vue.css
 echo 'Done.'
 echo ''
 

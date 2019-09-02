@@ -1,12 +1,12 @@
 import BFormStepper from './form-stepper'
-import { installFactory } from '../../utils/plugins'
+import { pluginFactory } from '../../utils/plugins'
 
-const components = {
-  BFormStepper
-}
+const FormStepperPlugin = /*#__PURE__*/ pluginFactory({
+  components: {
+    BFormStepper
+  }
+})
 
-export { BFormStepper }
+export { FormStepperPlugin }
 
-export default {
-  install: installFactory({ components })
-}
+export default FormStepperPlugin
