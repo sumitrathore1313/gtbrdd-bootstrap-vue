@@ -198,8 +198,13 @@ module.exports = {
   css: [
     'highlight.js/styles/atom-one-light.css',
     'codemirror/lib/codemirror.css',
+    '../../../assets/scss/custom.bootstrap.scss',
     '../scripts/build.scss', // BootstrapVue SCSS
-    '@assets/css/docs.min.css',
+    '../../../assets/scss/template.theme.scss',
+    '../../../assets/scss/custom.bulma.scss',
+    '../../../node_modules/bulma/bulma',
+    '../../../assets/scss/animates.scss',
+    '@/assets/css/docs.min.css',
     '@assets/scss/styles.scss'
   ]
 }
