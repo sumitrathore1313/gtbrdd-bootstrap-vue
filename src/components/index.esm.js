@@ -43,6 +43,7 @@ import { ToastPlugin } from './toast'
 import { TooltipPlugin } from './tooltip'
 
 // Getboarded
+// first block
 import { FormStepperPlugin } from './form-stepper'
 
 // Main plugin to install all component group plugins
@@ -308,4 +309,5 @@ export { TooltipPlugin } from './tooltip'
 export { BTooltip } from './tooltip/tooltip'
 
 // Getboarded
+// second block
 export { FormStepperPlugin } from './form-stepper'

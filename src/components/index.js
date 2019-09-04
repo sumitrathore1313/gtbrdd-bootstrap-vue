@@ -55,6 +55,7 @@ export { ToastPlugin as Toast } from './toast'
 export { TooltipPlugin as Tooltip } from './tooltip'
 
 // getboarded
+// third block
 export { FormStepperPlugin as FormStepper } from './form-stepper'
 
 // Export default as a plugin that installs all the component group plugins
