@@ -1,0 +1,37 @@
+#gbc-opportunity-card {
+  position: relative;
+  min-width: 300px;
+  max-width: 500px;
+  .card-title{
+    font-size: $size-3;
+  }
+  .deadline{
+    text-align: center;
+  }
+  .description{
+    //color: #00aa88;
+  }
+  .opportunity-top {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    .green-box {
+      background-color: $secondary;
+      color: $light;
+      border-radius: 40%;
+    }
+  }
+  .card-footer{
+    text-align: center;
+    .org-btn{
+      display: inline;
+      padding: 10px;
+    }
+    .col-5, .col-7{
+      padding: 2px;
+    }
+    img{
+      width: 25px;
+    }
+  }
+}

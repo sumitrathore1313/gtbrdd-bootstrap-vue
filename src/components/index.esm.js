@@ -44,6 +44,7 @@ import { TooltipPlugin } from './tooltip'
 
 // Getboarded
 // first block
+import { OpportunityCardPlugin } from './opportunity-card'
 import { FormStepperPlugin } from './form-stepper'
 
 // Main plugin to install all component group plugins
@@ -89,6 +90,8 @@ export const componentsPlugin = /*#__PURE__*/ pluginFactory({
     TooltipPlugin,
 
     //  getboarded
+    // fourth block
+    OpportunityCardPlugin,
     FormStepperPlugin
   }
 })
@@ -310,4 +313,5 @@ export { BTooltip } from './tooltip/tooltip'
 
 // Getboarded
 // second block
+export { OpportunityCardPlugin } from './opportunity-card'
 export { FormStepperPlugin } from './form-stepper'

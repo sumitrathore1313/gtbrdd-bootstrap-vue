@@ -66,9 +66,6 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-</style>
 """ % (stringcase.spinalcase(componentName), PComponentName)
     f.write(text)
 
@@ -99,10 +96,14 @@ export default {
     lines = f.readlines()
     text = '// first block\n'
     i = lines.index(text)
-    lines.insert(i+1, "import { "+PComponentName+"Plugin } from './"+stringcase.spinalcase(componentName)+"'")
+    lines.insert(i+1, "import { "+PComponentName+"Plugin } from './"+stringcase.spinalcase(componentName)+"'\n")
     text = '// second block\n'
     i = lines.index(text)
-    lines.insert(i+1, "export { "+PComponentName+"Plugin } from './"+stringcase.spinalcase(componentName)+"'")
+    lines.insert(i+1, "export { "+PComponentName+"Plugin } from './"+stringcase.spinalcase(componentName)+"'\n")
+    text = '    // fourth block\n'
+    i = lines.index(text)
+    lines.insert(i+1, "    "+PComponentName+"Plugin,\n")
+
   with open(esm_path, "w") as f:
     f.writelines(lines)
 
@@ -111,7 +112,7 @@ export default {
     lines = f.readlines()
     text = '// third block\n'
     i = lines.index(text)
-    lines.insert(i+1, "export { "+PComponentName+"Plugin as "+PComponentName+" } from './"+stringcase.spinalcase(componentName)+"'")
+    lines.insert(i+1, "export { "+PComponentName+"Plugin as "+PComponentName+" } from './"+stringcase.spinalcase(componentName)+"'\n")
   with open(index_path, "w") as f:
       f.writelines(lines)
 

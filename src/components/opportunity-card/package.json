@@ -1,0 +1,13 @@
+{
+  "name": "@bootstrap-vue/opportunity-card",
+  "version": "1.0.0",
+  "meta": {
+    "title": "Opportunity card",
+    "description": "Group a series of buttons together on a single line with <b-opportunity-card>.",
+    "components": [
+      {
+        "component": "BOpportunityCard"
+      }
+    ]
+  }
+}
