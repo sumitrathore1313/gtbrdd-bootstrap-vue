@@ -1,7 +1,6 @@
 # Opportunity card
 
-> The component `<b-opportunity-card>` is a wrapper that positions branding, navigation, and other elements
-> into a concise header.
+> The component `<b-opportunity-card>` is a opportunity card for display single opportunity.
 >
 **Example:**
 
