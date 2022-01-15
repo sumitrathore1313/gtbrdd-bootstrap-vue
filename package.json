@@ -119,7 +119,7 @@
     "jest-environment-jsdom-fourteen": "^0.1.0",
     "loader-utils": "^1.2.3",
     "lodash": "^4.17.14",
-    "marked": "^0.7.0",
+    "marked": "^4.0.10",
     "node-sass": "^4.12.0",
     "nuxt": "^2.8.1",
     "postcss-cli": "^6.1.3",
